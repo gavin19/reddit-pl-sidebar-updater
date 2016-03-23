@@ -2,7 +2,7 @@
 import praw
 import os
 import sys
-import html.parser
+from html import unescape
 from time import sleep
 import lxml.html
 from lxml.cssselect import CSSSelector as Css
@@ -187,7 +187,7 @@ class SidebarStats:
             away = table.cssselect(row + '.team-away a')[0].text
             date = table.cssselect(row + '.match-date')[0].text.strip()
             time = table.cssselect(row + '.kickoff')[0].text
-            comp = table.cssselect(row + '.match-competition')[0]
+            comp = table.cssselect(row + '.match-competition')[0].text
             compinfo = table.cssselect(row + '.match-competition .round-info')
             if compinfo:
                 comp = comp + compinfo[0].text
@@ -264,8 +264,7 @@ class SidebarStats:
         start = '[](#stats_start)'
         end = '[](#stats_end)'
         target_sub = self.r.get_subreddit(self.SUB)
-        desc = target_sub.get_settings()['description']
-        desc = html.parser.HTMLParser().unescape(desc)
+        desc = unescape(target_sub.get_settings()['description'])
         before = desc.split(start)
         after = desc.split(end)
         desc = before[0] + start + '\n' + self.update + end + after[1]
