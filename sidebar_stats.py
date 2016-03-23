@@ -1,10 +1,9 @@
-#!/usr/bin/python3
+"""Premier League sidebar updater for reddit."""
 import praw
 import os
 import sys
 import html.parser
 from time import sleep
-from datetime import datetime as time
 import lxml.html
 from lxml.cssselect import CSSSelector as Css
 import requests
@@ -30,6 +29,7 @@ class SidebarStats:
     o = OAuth2Util.OAuth2Util(r, server_mode=True)
 
     def login(self):
+        """Log in to the account associated with the script/app."""
         try:
             self.o.refresh()
             self.fetch_stats()
@@ -66,9 +66,9 @@ class SidebarStats:
 
         # Establish if the team is top or bottom of the league
         tab_top = Css('[id] + .league-table tr:nth-of-type(1) .team-name a')
-        tab_bottom = Css('[id] + .league-table tr:nth-of-type(20) .team-name a')
+        tab_bot = Css('[id] + .league-table tr:nth-of-type(20) .team-name a')
         top = tab_top(table)[0].text == self.TEAMD
-        bottom = tab_bottom(table)[0].text == self.TEAMD
+        bottom = tab_bot(table)[0].text == self.TEAMD
 
         # Otherwise establish what position they're in
         place = Css('[id*="' + self.TEAM + '"] .position .position-number')
@@ -98,11 +98,19 @@ class SidebarStats:
             return [rank, team, pld, gd, pts]
 
         if top:
-            self.make_position_table([get_row(main), get_row(first), get_row(second)], focus='####')
+            self.make_position_table([get_row(main),
+                                      get_row(first),
+                                      get_row(second)],
+                                     focus='####')
         elif bottom:
-            self.make_position_table([get_row(second), get_row(first), get_row(main)])
+            self.make_position_table([get_row(second),
+                                      get_row(first),
+                                      get_row(main)])
         elif not top and not bottom:
-            self.make_position_table([get_row(first), get_row(main), get_row(second)], focus='######')
+            self.make_position_table([get_row(first),
+                                      get_row(main),
+                                      get_row(second)],
+                                     focus='######')
         else:
             pass
 
@@ -134,14 +142,16 @@ class SidebarStats:
             away = table.cssselect(row + '.team-away a')[0].text
             date = table.cssselect(row + '.match-date')[0].text.strip()
             score = table.cssselect(row + '.score abbr')[0].text.strip()
-            comp = table.cssselect(row + '.match-competition')[0]
+            comp = table.cssselect(row + '.match-competition')[0].text
             compinfo = table.cssselect(row + '.match-competition .round-info')
             if compinfo:
                 comp = comp + compinfo[0].text
             return [home, away, date, score, comp]
 
         if third_place:
-            self.make_results_table([get_row(first), get_row(second), get_row(third)])
+            self.make_results_table([get_row(first),
+                                    get_row(second),
+                                    get_row(third)])
         elif second_place:
             self.make_results_table([get_row(first), get_row(second)])
         elif first_place:
@@ -185,7 +195,9 @@ class SidebarStats:
             return [home, away, when.strip(), comp]
 
         if third_place:
-            self.make_fixtures_table([get_row(first), get_row(second), get_row(third)])
+            self.make_fixtures_table([get_row(first),
+                                      get_row(second),
+                                      get_row(third)])
         elif second_place:
             self.make_fixtures_table([get_row(first), get_row(second)])
         elif first_place:
@@ -225,7 +237,9 @@ class SidebarStats:
             return [name, lg, fa, lc, tot]
 
         if third_place:
-            self.make_top_scorers_table([get_row(first), get_row(second), get_row(third)])
+            self.make_top_scorers_table([get_row(first),
+                                         get_row(second),
+                                         get_row(third)])
         elif second_place:
             self.make_top_scorers_table([get_row(first), get_row(second)])
         elif first_place:
