@@ -18,7 +18,7 @@ In that same ini file, you'll need to change the `team`/`display` and `sub` fiel
 
 http://www.bbc.co.uk/sport/football/teams/leicester-city
 
-The `display` value is the one used in the [league table](http://www.bbc.co.uk/sport/football/premier-league/table), which would be *Leicester* in this case. The `sub` value is the name of the subreddit. For Lecicester, it'd be `lcfc`.
+The `display` value is the one used in the [league table](http://www.bbc.co.uk/sport/football/premier-league/table), which would be *Leicester* in this case. The `sub` value is the name of the subreddit. For Leicester, it'd be `lcfc`.
 
 In the sidebar of the subreddit, add `[](#stats_start)[](#stats_end)`, where you want the tables to be injected.
 
